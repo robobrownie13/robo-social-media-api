@@ -1,0 +1,22 @@
+{
+  "name": "robo-social-media-api",
+  "version": "1.0.0",
+  "description": "robo-social-media-api # NoSQL Challenge: Social Network API",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "seed": "node utils/seed",
+    "heroku-postbuild": "node utils/seed.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^7.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
+}
