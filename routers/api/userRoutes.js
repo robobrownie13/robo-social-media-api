@@ -23,4 +23,4 @@
 
 // DELETE to remove a friend from a user's friend list
 
-//Fulfilling the following can add 10 points to your grade. Note that the highest grade you can achieve is still 100: Application deletes a user's associated thoughts when the user is deleted.
+// Fulfilling the following can add 10 points to your grade. Note that the highest grade you can achieve is still 100: Application deletes a user's associated thoughts when the user is deleted.
