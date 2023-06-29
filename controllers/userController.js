@@ -1,24 +1,5 @@
 const { User, Thought } = require("../models/User");
-// POST a new user:
 
-// // example data
-// {
-//   "username": "lernantino",
-//   "email": "lernantino@gmail.com"
-// }
-// PUT to update a user by its _id
-
-// DELETE to remove user by its _id
-
-// BONUS: Remove a user's associated thoughts when deleted.
-
-// /api/users/:userId/friends/:friendId
-
-// POST to add a new friend to a user's friend list
-
-// DELETE to remove a friend from a user's friend list
-
-// Fulfilling the following can add 10 points to your grade. Note that the highest grade you can achieve is still 100: Application deletes a user's associated thoughts when the user is deleted.
 module.exports = {
   async getUsers(req, res) {
     try {
@@ -43,7 +24,13 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // create a new user
+  // POST a new user:
+
+  // // example data
+  // {
+  //   "username": "lernantino",
+  //   "email": "lernantino@gmail.com"
+  // }
   async createUser(req, res) {
     try {
       const dbUserData = await User.create(req.body);
@@ -52,6 +39,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // PUT to update a user by its _id
   async updateUser(req, res) {
     try {
       const newUser = await Users.findOneAndUpdate(
@@ -65,6 +53,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // POST to add a new friend to a user's friend list
   async addFriend(req, res) {
     try {
       const newFriend = await Users.findOneAndUpdate(
@@ -77,6 +66,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  // DELETE to remove a friend from a user's friend list
 
   async removeFriend(req, res) {
     try {

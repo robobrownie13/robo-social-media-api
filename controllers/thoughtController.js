@@ -1,5 +1,6 @@
 // /api/thoughts
 const { Thought, User } = require("../models");
+
 // GET to get all thoughts
 module.exports = {
   async getThoughts(req, res) {
