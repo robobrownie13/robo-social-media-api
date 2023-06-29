@@ -1,7 +1,3 @@
-//thoughtText string required must be between 1 and 280 characters
-//createAt date set default value to current timestamp use getter method to format the timestamp on query
-//username string required
-//reactions array of nested documents created with reactionSchema
 const { Schema, model } = require("mongoose");
 const reactionSchema = require("./Reaction");
 
