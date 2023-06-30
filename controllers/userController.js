@@ -1,7 +1,8 @@
-const { User, Thought } = require("../models/User");
+const { User, Thought } = require("../models");
 
 module.exports = {
   async getUsers(req, res) {
+    console.log("herererere");
     try {
       const users = await User.find();
       res.json(users);
@@ -42,12 +43,12 @@ module.exports = {
   // PUT to update a user by its _id
   async updateUser(req, res) {
     try {
-      const newUser = await Users.findOneAndUpdate(
-        { _id: req.body.userId },
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: req.params.userId },
         req.body,
         { new: true }
       );
-      res.json("You information was updated.");
+      res.json(`Your information was updated, ${updatedUser.username}.`);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -56,11 +57,11 @@ module.exports = {
   // POST to add a new friend to a user's friend list
   async addFriend(req, res) {
     try {
-      const newFriend = await Users.findOneAndUpdate(
+      const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
         { $addToSet: { friends: { _id: req.params.friendId } } }
       );
-      res.json("Congratulations! You made a new friend!");
+      res.json(`${user.username} has made a new friend`);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -70,11 +71,11 @@ module.exports = {
 
   async removeFriend(req, res) {
     try {
-      const deletedFriend = await Users.findOneAndUpdate(
+      const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
         { $pull: { friends: req.params.friendId } }
       );
-      res.json("You have removed this person as a friend");
+      res.json(`${user.username} removed a friend from friends list`);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -90,7 +91,9 @@ module.exports = {
       }
 
       await Thought.deleteMany({ _id: { $in: user.thoughts } });
-      res.json({ message: "User and associated thoughts deleted!" });
+      res.json({
+        message: `${user.username} and associated thoughts deleted!`,
+      });
     } catch (err) {
       res.status(500).json(err);
     }

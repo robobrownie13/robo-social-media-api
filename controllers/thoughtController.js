@@ -30,7 +30,7 @@ module.exports = {
   async createThought(req, res) {
     try {
       const thought = await Thought.create(req.body);
-      const user = await User.findOneandUpdate(
+      const user = await User.findOneAndUpdate(
         { _id: req.body.userId },
         { $addToSet: { thoughts: thought._id } },
         { new: true }
@@ -40,7 +40,7 @@ module.exports = {
           message: "New thought created, but found no user with this ID",
         });
       }
-      res.json("Created new thought");
+      res.json(`${user.username} posted "${thought.thoughtText}"`);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -55,7 +55,7 @@ module.exports = {
   // PUT to update a thought by its _id
   async updateThought(req, res) {
     try {
-      const thought = await Thought.findOneandUpdate(
+      const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $set: req.body },
         { runValidators: true, new: true }
@@ -65,6 +65,7 @@ module.exports = {
           .status(404)
           .json({ message: "No thought with this ID exists" });
       }
+      res.json(`Post updated to: ${thought.thoughtText}`);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -73,7 +74,7 @@ module.exports = {
   // POST to create a reaction stored in a single thought's reactions array field
   async addReaction(req, res) {
     try {
-      const thought = await Thought.findOneandUpdate(
+      const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
         { $addToSet: { reactions: req.body } },
         { runValidators: true, new: true }
@@ -111,7 +112,7 @@ module.exports = {
   // DELETE to remove a thought by its _id
   async deleteThought(req, res) {
     try {
-      const thought = await Thought.findOneandRemove({
+      const thought = await Thought.findOneAndRemove({
         _id: req.params.thoughtId,
       });
       if (!thought) {
