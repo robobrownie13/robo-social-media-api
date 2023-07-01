@@ -40,7 +40,7 @@ module.exports = {
           message: "New thought created, but found no user with this ID",
         });
       }
-      res.json(`${user.username} posted "${thought.thoughtText}"`);
+      res.json(thought, user);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -65,7 +65,7 @@ module.exports = {
           .status(404)
           .json({ message: "No thought with this ID exists" });
       }
-      res.json(`Post updated to: ${thought.thoughtText}`);
+      res.json(thought);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -104,7 +104,7 @@ module.exports = {
           .json({ message: "No thought with this ID exists" });
       }
 
-      res.json(thought);
+      res.json(thought, "Reaction was removed");
     } catch (err) {
       res.status(500).json(err);
     }

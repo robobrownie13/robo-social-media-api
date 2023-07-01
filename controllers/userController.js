@@ -2,7 +2,6 @@ const { User, Thought } = require("../models");
 
 module.exports = {
   async getUsers(req, res) {
-    console.log("herererere");
     try {
       const users = await User.find();
       res.json(users);
@@ -10,6 +9,7 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+
   async getSingleUser(req, res) {
     try {
       const user = await User.findOne({ _id: req.params.userId }).select(
@@ -34,8 +34,8 @@ module.exports = {
   // }
   async createUser(req, res) {
     try {
-      const dbUserData = await User.create(req.body);
-      res.json(dbUserData);
+      const userData = await User.create(req.body);
+      res.json(`Welcome, ${userData.username}!`, userData);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -48,7 +48,10 @@ module.exports = {
         req.body,
         { new: true }
       );
-      res.json(`Your information was updated, ${updatedUser.username}.`);
+      res.json(
+        `Your information was updated, ${updatedUser.username}.`,
+        updatedUser
+      );
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
