@@ -64,7 +64,7 @@ module.exports = {
         { _id: req.params.userId },
         { $addToSet: { friends: { _id: req.params.friendId } } }
       );
-      res.json(`${user.username} has made a new friend`);
+      res.json(`${user.username} has made a new friend`, user);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -78,7 +78,7 @@ module.exports = {
         { _id: req.params.userId },
         { $pull: { friends: req.params.friendId } }
       );
-      res.json(`${user.username} removed a friend from friends list`);
+      res.json(`${user.username} removed a friend from friends list`, user);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
