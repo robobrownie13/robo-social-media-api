@@ -12,9 +12,7 @@ module.exports = {
 
   async getSingleUser(req, res) {
     try {
-      const user = await User.findOne({ _id: req.params.userId }).select(
-        "-__v"
-      );
+      const user = await User.findOne({ _id: req.params.userId });
 
       if (!user) {
         return res.status(404).json({ message: "No user with that ID" });
@@ -35,7 +33,7 @@ module.exports = {
   async createUser(req, res) {
     try {
       const userData = await User.create(req.body);
-      res.json(`Welcome, ${userData.username}!`, userData);
+      res.json(userData);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -48,10 +46,7 @@ module.exports = {
         req.body,
         { new: true }
       );
-      res.json(
-        `Your information was updated, ${updatedUser.username}.`,
-        updatedUser
-      );
+      res.json(updatedUser);
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -64,7 +59,8 @@ module.exports = {
         { _id: req.params.userId },
         { $addToSet: { friends: { _id: req.params.friendId } } }
       );
-      res.json(`${user.username} has made a new friend`, user);
+      console.log(user);
+      res.json({ message: `${user.username} has made a new friend`, user });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -78,7 +74,10 @@ module.exports = {
         { _id: req.params.userId },
         { $pull: { friends: req.params.friendId } }
       );
-      res.json(`${user.username} removed a friend from friends list`, user);
+      res.json({
+        message: `${user.username} removed a friend from friends list`,
+        user,
+      });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -88,12 +87,14 @@ module.exports = {
   async deleteUser(req, res) {
     try {
       const user = await User.findOneAndDelete({ _id: req.params.userId });
-
+      console.log(user);
+      console.log(user.thoughts);
       if (!user) {
         return res.status(404).json({ message: "No user with that ID" });
       }
-
+      console.log(user.thoughts);
       await Thought.deleteMany({ _id: { $in: user.thoughts } });
+      console.log(user.thoughts);
       res.json({
         message: `${user.username} and associated thoughts deleted!`,
       });

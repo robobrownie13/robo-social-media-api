@@ -15,7 +15,7 @@ module.exports = {
   // GET to get a single thought by its _id
   async getSingleThought(req, res) {
     try {
-      const thought = await Thought.findone({ _id: req.params.thoughtId });
+      const thought = await Thought.findOne({ _id: req.params.thoughtId });
       if (!thought) {
         return res
           .status(404)
@@ -40,7 +40,10 @@ module.exports = {
           message: "New thought created, but found no user with this ID",
         });
       }
-      res.json(thought, user);
+      res.json({
+        message: `${user.username} wrote the following thought: ${thought.thoughtText}`,
+        thought,
+      });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -65,7 +68,10 @@ module.exports = {
           .status(404)
           .json({ message: "No thought with this ID exists" });
       }
-      res.json(thought);
+      res.json({
+        message: `${thought.username} updated their thought: ${thought.thoughtText}`,
+        thought,
+      });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);
@@ -84,7 +90,13 @@ module.exports = {
           .status(404)
           .json({ message: "No thought with this ID exists" });
       }
-      res.json(thought);
+      const reactionsArr = thought.reactions;
+      const lastReaction = reactionsArr[reactionsArr.length - 1];
+      res.json({
+        message: `${lastReaction.username} reacted to ${thought.username}'s post: ${lastReaction.reactionBody}`,
+        thought: { text: thought.thoughtText, id: thought._id },
+        reaction: thought.reactions,
+      });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -103,8 +115,11 @@ module.exports = {
           .status(404)
           .json({ message: "No thought with this ID exists" });
       }
-
-      res.json(thought, "Reaction was removed");
+      res.json({
+        message: `Reaction was removed`,
+        thought: { text: thought.thoughtText, id: thought._id },
+        reactions: thought.reactions,
+      });
     } catch (err) {
       res.status(500).json(err);
     }
@@ -115,6 +130,11 @@ module.exports = {
       const thought = await Thought.findOneAndRemove({
         _id: req.params.thoughtId,
       });
+      const user = await User.findOneAndUpdate(
+        { thoughts: req.body.thoughtId },
+        { $pull: { thoughts: req.body.thoughtId } }
+      );
+
       if (!thought) {
         return res
           .status(404)
